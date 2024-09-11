@@ -1,0 +1,106 @@
+#include "include/cppjieba/Jieba.hpp"
+#include <fstream>
+#include "windows.h"
+using namespace std;
+
+const string DICT_PATH = "./dict/jieba.dict.utf8";
+const string HMM_PATH = "./dict/hmm_model.utf8";
+const string USER_DICT_PATH = "./dict/user.dict.utf8";
+const string IDF_PATH = "./dict/idf.utf8";
+const string STOP_WORD_PATH = "./dict/stop_words.utf8";
+
+string in1, in2, out;
+map<string, int> cnt1, cnt2;
+
+//文件的读入
+void read(string& text, string path) {
+    ifstream fstream;
+    fstream.open(path);
+    if (!fstream.is_open()) {
+        cout << "Failed to open the file" << endl;
+        return;
+    }
+    string s;
+    while (getline(fstream, s))
+        text += s;
+    fstream.close();
+}
+
+//文件的输出
+void OutputFile(string path, double ans) {
+    ofstream outputFile;
+    outputFile.open(path);
+    if (outputFile.is_open()) {
+        outputFile << ans;
+    }
+    else {
+        outputFile.close();
+        cout << "failed to open the file" << endl;
+        return;
+    }
+    cout << "output over" << endl;
+    outputFile.close();
+}
+
+//调用jieba库进行分词,然后记录每个词出现的次数
+void work(string text, map<string, int>& mp) {
+    cppjieba::Jieba jieba(DICT_PATH,
+        HMM_PATH,
+        USER_DICT_PATH,
+        IDF_PATH,
+        STOP_WORD_PATH);
+    vector<string> words;
+
+    jieba.Cut(text, words, true);
+    for (auto i : words)
+        mp[i]++;
+}
+
+//求向量模
+double cul(map<string, int>& mp) {
+    double mo = 0.0;
+    for (auto [x, y] : mp) {
+        mo += pow((double)y, 2);
+    }
+    return sqrt(mo);
+}
+
+//计算余弦相似度
+double getans(map<string, int>& mp1, map<string, int>& mp2) {
+    double dotProduct = 0.0;
+    for (auto it : mp1) {
+        auto it2 = mp2.find(it.first);
+        if (it2 != mp2.end())
+            dotProduct += ((double)it.second) * ((double)it2->second);
+    }
+    double mo1 = cul(mp1);
+    double mo2 = cul(mp2);
+    return dotProduct / (mo1 * mo2);
+}
+
+
+int main(int argc, char** argv) {
+    if (argc != 4) {
+        cout << "input error" << endl;
+        return 0;
+    }
+    SetConsoleCP(CP_UTF8);//确定输入的字符编码
+    SetConsoleOutputCP(CP_UTF8);//确定输出的字符编码
+
+    vector<string> path;
+    for (int i = 1; i < argc; i++) {
+        path.push_back(argv[i]);
+        cout << "read file success" << " " << path.back() << endl;
+    }
+    read(in1, path[0]);
+    work(in1, cnt1);
+
+    read(in2, path[1]);
+    work(in2, cnt2);
+
+
+    double ans = getans(cnt1, cnt2);
+    out = path[2];
+    OutputFile(out, ans);
+    return 0;
+}
