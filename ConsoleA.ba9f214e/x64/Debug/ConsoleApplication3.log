@@ -1,0 +1,12 @@
+﻿  ConsoleApplication3.cpp
+D:\vscode\ConsoleApplication3\include\cppjieba\HMMSegment.hpp(162,25): warning C4267: “=”: 从“size_t”转换到“_Ty”，可能丢失数据
+D:\vscode\ConsoleApplication3\include\cppjieba\HMMSegment.hpp(162,25): warning C4267:         with
+D:\vscode\ConsoleApplication3\include\cppjieba\HMMSegment.hpp(162,25): warning C4267:         [
+D:\vscode\ConsoleApplication3\include\cppjieba\HMMSegment.hpp(162,25): warning C4267:             _Ty=int
+D:\vscode\ConsoleApplication3\include\cppjieba\HMMSegment.hpp(162,25): warning C4267:         ]
+  (编译源文件“ConsoleApplication3.cpp”)
+  
+D:\vscode\ConsoleApplication3\include\cppjieba\HMMSegment.hpp(178,16): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  (编译源文件“ConsoleApplication3.cpp”)
+  
+  ConsoleApplication3.vcxproj -> D:\vscode\ConsoleApplication3\x64\Debug\ConsoleApplication3.exe
